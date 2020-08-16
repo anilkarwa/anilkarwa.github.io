@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Marble Ambient</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, shrink-to-fit=no, width=device-width">
+	<link rel="stylesheet" href="css/styles.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="css/swiper-bundle.min.css">
+	<link rel="stylesheet" href="css/materialize.min.css">
+</head>
+	<body>
+	
+	 <div id="app">
+		 <div class="preloader-container fullsize center">
+			<div class="preloader-wrapper big active">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+						<div class="circle"></div>
+					</div>
+					<div class="gap-patch">
+						<div class="circle"></div>
+					</div>
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="showcase-swiper-container fullsize">
+			<div class="swiper-wrapper"></div>
+			<div class="swiper-pagination"></div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+		</div>
+		<div class="main-content fullsize">
+			<canvas id="canvas" class="fullsize"></canvas>
+			<a class="home-btn btn-floating btn-large waves-effect waves-light red"><i class="material-icons">home</i></a>
+			<div class="object-swiper-container">
+				<div class="swiper-wrapper"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div> 
+	</div>
+	
+	
+          
+
+	<!-- Modal Structure -->
+	<div id="modal1" class="modal modal-fixed-footer">
+		<div class="modal-content">
+			<h4>Instructions</h4>
+				<div class="row">
+					<div class="col s12">
+						<p class="instructions"><b>1.</b> Use proper cropped image, to get correct view of the marble surface</p>
+					</div>
+					<div class="col s6">
+						<div class="innerData">
+							<span class="captionImage" style="color: red;">Bad</span>
+							<img class="imageModel" src="images/modal-images/bad-1.jpg" />
+						</div>
+
+					</div>
+					  <div class="col s6">
+						<div class="innerData">
+							<span class="captionImage" style="color: green;">Good</span>
+							<img class="imageModel" src="images/modal-images/good-1.jpg" />
+						</div>
+
+					  </div>
+				</div>
+
+				<div class="row">
+					<div class="col s12">
+						<p class="instructions"><b>2.</b> Use image with proper light and clear view</p>
+					</div>
+					<div class="col s6">
+						<div class="innerData">
+							<span class="captionImage" style="color: red;">Bad</span>
+							<img class="imageModel" src="images/modal-images/bad-2.jpg" />
+						</div>
+
+					</div>
+					  <div class="col s6">
+						<div class="innerData">
+							<span class="captionImage" style="color: green;">Good</span>
+							<img class="imageModel" src="images/modal-images/good-2.jpg" />
+						</div>
+
+					  </div>
+				</div>
+
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-close waves-effect waves-green btn-flat">I, Agree</a>
+		</div>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/materialize.js"></script>
+	<script src="js/swiper-bundle.min.js"></script>
+	<script src="js/three.min.js"></script>
+	<script src="js/GLTFLoader.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/objectData.js"></script>
+	<script src="js/App.js"></script>
+	
+
+	<script>
+
+		$(document).ready(function(){
+			$('.modal').modal();
+			var elem = document.querySelector('#modal1');
+			var instance = M.Modal.getInstance(elem);
+			instance.open();
+			const app = new MarbleShowcaseApp( '#app' );
+			app.createShowcaseSwiper( objectData );
+			// app.hideShowcaseSwiper();
+		});
+
+	</script>
+</body>
+</html>

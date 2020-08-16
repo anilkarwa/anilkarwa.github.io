@@ -1,0 +1,142 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	background: #f4f4f4;
+}
+
+.fullsize {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.preloader-container {
+	background: #fff;
+	z-index: 999;
+}
+
+.showcase-swiper-container {
+	--swiper-theme-color: white !important;
+	z-index: 900;
+	background: #000;
+}
+
+.content-swiper-container {
+	z-index: 800;
+}
+
+.showcase-swiper-container .slide-content {
+	color: #fff;
+	flex-direction: column;
+}
+
+.showcase-swiper-container .slide-thumbnail {
+	object-fit: cover;
+	mix-blend-mode: soft-light;
+}
+
+.object-swiper-container {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 140px;
+	background: #fff;
+	overflow: hidden;
+}
+
+.object-slide-title {
+	width: 100%;
+	padding: 5px;
+	color: #fff;
+	font-size: 12px;
+	background: rgba(0, 0, 0, 0.8);
+	z-index: 999;
+}
+
+.camera-icon-wrapper {
+	width: 100%;
+	height: calc(140px - 28px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 4em;
+	background: rgba(0, 0, 0, 0.8);
+	cursor: pointer;
+}
+
+.camera-icon {
+	background: url(../images/icons/camera.png) no-repeat center / 100% 100%;
+	filter: invert(1);
+	width: 1em;
+	height: 1em;
+}
+
+.texture-swiper-container {
+	width: 100%;
+}
+
+.texture-swiper-container .swiper-slide {
+	overflow: hidden;
+}
+
+.texture-thumbnail {
+	object-fit: cover;
+	width: 100%;
+	height: calc( 140px - 28px );
+	transition: 0.2s;
+}
+
+.home-btn {
+	top: 20px;
+	left: 20px;
+}
+
+.captionImage{
+	font-size: 18px;
+	margin-left: 33%;
+
+}
+.imageModel{
+	width: 80%;
+	height: 50%;
+}
+
+.innerData{
+	display: flex; 
+	flex-direction: column;
+}
+
+.instructions{
+	font-size: 16px;
+	font-weight: 100;
+	justify-content: center;
+}
+
+.btn, .btn-large, .btn-small{
+	background-color: #F5B041 !important;
+}
+
+@media only screen and (min-width: 600px) {
+	.texture-thumbnail:hover {
+		width: 150%;
+	}
+	
+}
+
+
+@media only screen and (max-width: 360px) {
+	.imageModel{
+		width: 110px;
+		height: 80px;
+	}
+	
+}
