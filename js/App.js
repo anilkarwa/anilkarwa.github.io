@@ -465,7 +465,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 		this.controls.update();
 
 		this.camera.near = sizeLength / 100;
-		this.camera.far = sizeLength * 2;
+		this.camera.far = sizeLength * 5;
 		this.camera.updateProjectionMatrix();
 
 		this.controls.maxDistance = sizeLength * 2;
