@@ -49,7 +49,7 @@ body {
 	left: 0;
 	width: 100%;
 	height: 140px;
-	background: #fff;
+	background: transparent;
 	overflow: hidden;
 }
 
@@ -82,6 +82,7 @@ body {
 
 .texture-swiper-container {
 	width: 100%;
+	margin-top: 10px;
 }
 
 .texture-swiper-container .swiper-slide {
@@ -123,6 +124,19 @@ body {
 
 .btn, .btn-large, .btn-small{
 	background-color: #F5B041 !important;
+}
+
+.modal {
+	width: 90% !important;
+	max-height: 85% !important;
+}
+
+.modal.modal-fixed-footer {
+	height: 85% !important;
+}
+
+.marble-swiper .swiper-slide {
+	margin-right: 5px !important;
 }
 
 @media only screen and (min-width: 600px) {

@@ -253,13 +253,11 @@ Object.assign( MarbleShowcaseApp.prototype, {
 			objectSlideEl.classList.add( 'swiper-slide' );
 			objectSwiperWrapperEl.appendChild( objectSlideEl );
 
-			const objectSlideTitleEl = document.createElement( 'div' );
-			objectSlideTitleEl.classList.add( 'object-slide-title' );
-			objectSlideTitleEl.appendChild( document.createTextNode( object.title ) );
-			objectSlideEl.appendChild( objectSlideTitleEl );
+
 
 			const textureSwiperContainerEl = document.createElement( 'div' );
 			textureSwiperContainerEl.classList.add( 'texture-swiper-container' );
+			textureSwiperContainerEl.classList.add( 'marble-swiper' );
 			objectSlideEl.appendChild( textureSwiperContainerEl );
 
 			const textureSwiperSlideWrapperEl = document.createElement( 'div' );
@@ -281,7 +279,9 @@ Object.assign( MarbleShowcaseApp.prototype, {
 					if ( node ) {
 
 						if ( node.isMesh ) {
-							
+							node.material.specular = 0x111111;
+							node.material.reflectivity = 0.5;
+							node.material.shininess = 50;
 							node.material.map = texture;
 							node.material.needsUpdate = true;
 
@@ -323,21 +323,16 @@ Object.assign( MarbleShowcaseApp.prototype, {
 							const aspect = texture.image.width / texture.image.height;
 
 							if ( object.userImageRepeat ) {
-								
 								texture.minFilter = THREE.LinearFilter;
-								
 								texture.repeat.set( object.userImageRepeat / aspect, object.userImageRepeat );
 								texture.updateMatrix();
 							
 							} else {
-								
 								texture.repeat.set( 1 / aspect, 1 );
 								texture.updateMatrix();
-
 							}
 
-							texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
+							texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;				
 							setTexture( texture );
 
 						} );
@@ -376,7 +371,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 					if ( ! thumbnailEl._texture ) {
 
 						thumbnailEl._texture = new THREE.Texture( thumbnailEl );
-						thumbnailEl._texture.wrapS = thumbnailEl._texture.wrapT = THREE.RepeatWrapping; //MirroredRepeatWrapping
+						thumbnailEl._texture.wrapS = thumbnailEl._texture.wrapT = THREE.MirroredRepeatWrapping; //THREE.RepeatWrapping
 						thumbnailEl._texture.needsUpdate = true;
 
 					}
@@ -465,7 +460,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 		this.controls.update();
 
 		this.camera.near = sizeLength / 100;
-		this.camera.far = sizeLength * 5;
+		this.camera.far = sizeLength * 2;
 		this.camera.updateProjectionMatrix();
 
 		this.controls.maxDistance = sizeLength * 2;

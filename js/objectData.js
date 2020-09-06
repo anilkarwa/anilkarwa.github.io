@@ -7,7 +7,7 @@ const objectData = [ {
 	objects: [ {
 		name: "Counter_Top",
 		title: "Counter Top",
-		userImageRepeat: 4,
+		userImageRepeat: 2,
 		textures: [
 			"./images/marbles/1.jpg",
 			"./images/marbles/11.jpg",
@@ -23,7 +23,7 @@ const objectData = [ {
 	objects: [ {
 		name: [ "Floor", "Wall_1", "Wall_2", "Wall_3", "Wall_4", "Wall_5" ],
 		title: "Floor and Walls",
-		userImageRepeat: 3,
+		userImageRepeat: 2,
 		textures: [
 			"./images/marbles/4.jpg",
 			"./images/marbles/10.jpg",
@@ -39,7 +39,7 @@ const objectData = [ {
 	objects: [ {
 		name: [ "Floor" ],
 		title: "Floor",
-		userImageRepeat: 3,
+		userImageRepeat: 2,
 		textures: [
 			"./images/marbles/8.jpg",
 			"./images/marbles/12.jpg",
