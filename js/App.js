@@ -237,6 +237,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 		const inputEl = document.createElement( 'input' );
 		inputEl.type = 'file';
 		inputEl.accept = 'image/*';
+		inputEl.setAttribute('id', 'textureImage')
 		// inputEl.setAttribute( 'capture', '' );
 
 		inputEl.onclick = function () {
@@ -309,13 +310,24 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 				if ( ! model ) return;
 
-				inputEl.click();
+				//inputEl.click();
+				$('#inputImage').click();
 
-				inputEl.oninput = function ( event ) {
+				$("#download").on("click", function(){
+					let elem = document.querySelector('#modal2');
+					let instance = M.Modal.getInstance(elem);
+					let elem2 = document.querySelector('#getCroppedCanvasModal');
+					let instance2 = M.Modal.getInstance(elem2);
+					instance.close();
+					instance2.close();
 
-					const file = event.target.files[ 0 ];
+					let file = $('#finalImage').attr('src');
 					const fileReader = new FileReader();
 
+					fetch(file)
+					.then(res => res.blob())
+					.then(blob => fileReader.readAsDataURL(blob))
+						
 					fileReader.onload = function ( event ) {
 
 						scope.textureLoader.load( event.target.result, function ( texture ) {
@@ -336,13 +348,9 @@ Object.assign( MarbleShowcaseApp.prototype, {
 							setTexture( texture );
 
 						} );
-
 					}
 
-					fileReader.readAsDataURL( file );
-
-				}
-
+				  });
 			}
 
 			const cameraIconWrapperEl = document.createElement( 'div' );

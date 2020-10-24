@@ -82,7 +82,7 @@ body {
 
 .texture-swiper-container {
 	width: 100%;
-	margin-top: 10px;
+	margin-top: 25px;
 }
 
 .texture-swiper-container .swiper-slide {
@@ -126,6 +126,10 @@ body {
 	background-color: #F5B041 !important;
 }
 
+.btn-warning {
+	background-color: rgb(223, 102, 102) !important;
+}
+
 .modal {
 	width: 90% !important;
 	max-height: 85% !important;
@@ -139,11 +143,19 @@ body {
 	margin-right: 5px !important;
 }
 
+.img-container{
+    max-height: 200px !important;
+}
+
+.docs-cropped .modal-body > canvas {
+    max-width: 100%;
+}
+
+
 @media only screen and (min-width: 600px) {
 	.texture-thumbnail:hover {
 		width: 150%;
 	}
-	
 }
 
 
