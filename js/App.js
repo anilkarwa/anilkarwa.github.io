@@ -269,7 +269,27 @@ Object.assign( MarbleShowcaseApp.prototype, {
 			cameraSlideEl.classList.add( 'swiper-slide' );
 			textureSwiperSlideWrapperEl.appendChild( cameraSlideEl );
 
-
+			let imageUrl = this.getUrlParameter('imageLink');
+			if(imageUrl){
+				$("#image").cropper('destroy').attr('src', imageUrl).cropper({
+					aspectRatio: 16 / 9,
+					preview: '.img-preview',
+					crop: function (e) {
+						$('#dataX').val(Math.round(e.detail.x));
+						$('#dataY').val(Math.round(e.detail.y));
+						$('#dataHeight').val(Math.round(e.detail.height));
+						$('#dataWidth').val(Math.round(e.detail.width));
+						$('#dataRotate').val(e.detail.rotate);
+						$('#dataScaleX').val(e.detail.scaleX);
+						$('#dataScaleY').val(e.detail.scaleY);
+					}
+				  });
+				let elem2 = document.querySelector('#modal2');
+				let instance2 = M.Modal.getInstance(elem2);
+				$("#image").attr("src", imageUrl);
+				$("#aspectRatio4").click();
+				instance2.open();
+			}
 
 			$("#download").on("click", function () {
 				let elem = document.querySelector('#modal2');
