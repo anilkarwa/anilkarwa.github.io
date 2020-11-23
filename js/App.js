@@ -91,10 +91,10 @@ function MarbleShowcaseApp( elQuery ) {
 	var envMap = cubeTextureLoader.load( urls );
 	this.scene.environment = envMap;
 
-	this.ambientLight = new THREE.AmbientLight( '#fff', 0.5 );
+	this.ambientLight = new THREE.AmbientLight( '#fff', 0.7 );
 	this.scene.add( this.ambientLight );
 
-	this.dirLight = new THREE.DirectionalLight( '#fff', 0.5 );
+	this.dirLight = new THREE.DirectionalLight( '#fff', 0.050 );
 	this.scene.add( this.dirLight );
 
 	this.gltfLoader = new THREE.GLTFLoader();
@@ -269,6 +269,21 @@ Object.assign( MarbleShowcaseApp.prototype, {
 			cameraSlideEl.classList.add( 'swiper-slide' );
 			textureSwiperSlideWrapperEl.appendChild( cameraSlideEl );
 
+
+
+			$("#download").on("click", function () {
+				let elem = document.querySelector('#modal2');
+				let instance = M.Modal.getInstance(elem);
+				let elem2 = document.querySelector('#getCroppedCanvasModal');
+				let instance2 = M.Modal.getInstance(elem2);
+				instance.close();
+				instance2.close();
+
+				let file = $('#finalImage').attr('src');
+				loadSelectedImage(file);
+
+			});
+
 			function setTexture( texture ) {
 
 				if ( ! Array.isArray( object.name ) ) object.name = [ object.name ];
@@ -280,9 +295,9 @@ Object.assign( MarbleShowcaseApp.prototype, {
 					if ( node ) {
 
 						if ( node.isMesh ) {
-							node.material.specular = 0x111111;
+							node.material.specular = 0x494949;
 							node.material.reflectivity = 0.5;
-							node.material.shininess = 50;
+							node.material.shininess = 30;
 							node.material.map = texture;
 							node.material.needsUpdate = true;
 
@@ -312,45 +327,36 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 				//inputEl.click();
 				$('#inputImage').click();
+			}
 
-				$("#download").on("click", function(){
-					let elem = document.querySelector('#modal2');
-					let instance = M.Modal.getInstance(elem);
-					let elem2 = document.querySelector('#getCroppedCanvasModal');
-					let instance2 = M.Modal.getInstance(elem2);
-					instance.close();
-					instance2.close();
+			function loadSelectedImage(file){
+				const fileReader = new FileReader();
 
-					let file = $('#finalImage').attr('src');
-					const fileReader = new FileReader();
+				fetch(file)
+				.then(res => res.blob())
+				.then(blob => fileReader.readAsDataURL(blob))
+					
+				fileReader.onload = function ( event ) {
 
-					fetch(file)
-					.then(res => res.blob())
-					.then(blob => fileReader.readAsDataURL(blob))
+					scope.textureLoader.load( event.target.result, function ( texture ) {
+
+						const aspect = texture.image.width / texture.image.height;
+
+						if ( object.userImageRepeat ) {
+							texture.minFilter = THREE.LinearFilter;
+							texture.repeat.set( object.userImageRepeat / aspect, object.userImageRepeat );
+							texture.updateMatrix();
 						
-					fileReader.onload = function ( event ) {
+						} else {
+							texture.repeat.set( 1 / aspect, 1 );
+							texture.updateMatrix();
+						}
 
-						scope.textureLoader.load( event.target.result, function ( texture ) {
+						texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;				
+						setTexture( texture );
 
-							const aspect = texture.image.width / texture.image.height;
-
-							if ( object.userImageRepeat ) {
-								texture.minFilter = THREE.LinearFilter;
-								texture.repeat.set( object.userImageRepeat / aspect, object.userImageRepeat );
-								texture.updateMatrix();
-							
-							} else {
-								texture.repeat.set( 1 / aspect, 1 );
-								texture.updateMatrix();
-							}
-
-							texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;				
-							setTexture( texture );
-
-						} );
-					}
-
-				  });
+					} );
+				}
 			}
 
 			const cameraIconWrapperEl = document.createElement( 'div' );
@@ -471,7 +477,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 		this.camera.far = sizeLength * 2;
 		this.camera.updateProjectionMatrix();
 
-		this.controls.maxDistance = sizeLength * 2;
+		this.controls.maxDistance = sizeLength 
 
 		object.position.x = - center.x;
 		object.position.y = - center.y + size.y / 2;
@@ -515,6 +521,20 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 		window.requestAnimationFrame( this._animate );
 
+	},
+	getUrlParameter: function(sParam) {
+		var sPageURL = window.location.search.substring(1),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+	
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+	
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
 	}
 
 } );

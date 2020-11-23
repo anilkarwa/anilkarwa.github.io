@@ -164,7 +164,7 @@ $(function () {
           break;
 
         case 'getCroppedCanvas':
-          console.log('inside')
+
           if (result) {
             // Bootstrap's Modal
             $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
@@ -233,10 +233,10 @@ $(function () {
 
   // Import image
   var $inputImage = $('#inputImage');
-  console.log('upload image',$inputImage)
+
   if (URL) {
     $inputImage.change(function () {
-      console.log('change called')
+    
       var files = this.files;
       var file;
 
@@ -258,8 +258,8 @@ $(function () {
           uploadedImageURL = URL.createObjectURL(file);
           $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
           let elem2 = document.querySelector('#modal2');
-					let instance2 = M.Modal.getInstance(elem2);
-					$("#image").attr("src", uploadedImageURL);
+          let instance2 = M.Modal.getInstance(elem2);
+          $("#image").attr("src", uploadedImageURL);
 					$("#aspectRatio4").click();
 					instance2.open();
 
