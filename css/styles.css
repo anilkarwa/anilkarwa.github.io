@@ -179,9 +179,23 @@ body {
 .model-swiper-container .swiper-wrapper .swiper-slide {
 	background-position: center;
 	background-size: cover;
-	width: 312px;
-    height: 80%;
+	width: 290px;
+    height: 60%;
     align-self: center;
+}
+
+.model-swiper-container .swiper-wrapper .swiper-slide .slide-content h1{
+	font-size: 2.8rem;
+}
+
+.model-swiper-container .swiper-wrapper .swiper-slide .slide-content p{
+	font-size: 1.1rem;
+	margin: 9px;
+}
+
+.showcase-swiper-container .swiper-wrapper .swiper-slide .slide-content p{
+	font-size: 1.1rem;
+    margin: 50px;
 }
 
 .btn-small i{
