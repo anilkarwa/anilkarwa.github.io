@@ -263,7 +263,7 @@ $(function () {
 					$("#aspectRatio4").click();
 					instance2.open();
 
-          //$inputImage.val('');
+          $inputImage.val('');
         } else {
           window.alert('Please choose an image file.');
         }

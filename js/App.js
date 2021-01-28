@@ -14,6 +14,18 @@ function MarbleShowcaseApp( elQuery ) {
 	this.objectSwiperContainerEl = this.el.querySelector( '.object-swiper-container' );
 	this.homeBtnEl = this.el.querySelector( '.home-btn' );
 
+	this.modelSwiperContainerEl = this.el.querySelector( '.model-swiper-container' );
+	this.modelContentEl = this.el.querySelector( '.model-content' );
+	this.backBtnEl = this.el.querySelector( '.back-btn' );
+
+	this.backBtnEl.addEventListener( 'click', ( function () {
+
+		this.modelContentEl.style.display = 'none';
+
+		this.showShowcaseSwiper();
+
+	} ).bind( this ) );
+
 	this.homeBtnEl.addEventListener( 'click', ( function () {
 		
 		this.showShowcaseSwiper();
@@ -37,6 +49,23 @@ function MarbleShowcaseApp( elQuery ) {
 			el: '.swiper-pagination',
 			clickable: true
 		}
+	};
+
+	this.modalShowCaseSwiperSettings = {
+		effect: 'coverflow',
+		grabCursor: true,
+		centeredSlides: true,
+		slidesPerView: 'auto',
+		coverflowEffect: {
+		  rotate: 50,
+		  stretch: 0,
+		  depth: 100,
+		  modifier: 1,
+		  slideShadows: true,
+		},
+		pagination: {
+		  el: '.swiper-pagination',
+		},
 	};
 
 	this.textureSwiperSettings = {
@@ -91,14 +120,18 @@ function MarbleShowcaseApp( elQuery ) {
 	var envMap = cubeTextureLoader.load( urls );
 	this.scene.environment = envMap;
 
-	this.ambientLight = new THREE.AmbientLight( '#fff', 0.7 );
+	this.ambientLight = new THREE.AmbientLight( '#fff', 0.5 );
 	this.scene.add( this.ambientLight );
 
-	this.dirLight = new THREE.DirectionalLight( '#fff', 0.050 );
+	this.dirLight = new THREE.DirectionalLight( '#fff', 0.5 );
 	this.scene.add( this.dirLight );
 
 	this.gltfLoader = new THREE.GLTFLoader();
 	this.textureLoader = new THREE.TextureLoader();
+
+	const loader = new THREE.TextureLoader();
+	const bgTexture = loader.load('../images/render-compressed/smoothbg2.jpg');
+	this.scene.background = bgTexture;
 
 	this.animate();
 
@@ -106,71 +139,83 @@ function MarbleShowcaseApp( elQuery ) {
 
 Object.assign( MarbleShowcaseApp.prototype, {
 
-	createShowcaseSlide: function ( object ) {
+	createSlide: function ( title, desc, thumbnailSrc ) {
 
 		const slideEl = document.createElement( 'div' );
 		slideEl.classList.add( 'swiper-slide' );
 
-		const slideThumbnailEl = document.createElement( 'img' );
-		slideThumbnailEl.classList.add( 'slide-thumbnail', 'fullsize' );
-		slideThumbnailEl.setAttribute( 'src', object.thumbnailSrc );
-		slideEl.appendChild( slideThumbnailEl );
+		if ( thumbnailSrc ) {
 
-		slideThumbnailEl.onerror = function () {
+			const slideThumbnailEl = document.createElement( 'img' );
+			slideThumbnailEl.classList.add( 'slide-thumbnail', 'fullsize' );
+			slideThumbnailEl.setAttribute( 'src', thumbnailSrc );
+			slideEl.appendChild( slideThumbnailEl );
 
-			this.style.display = "none";
-		
+			slideThumbnailEl.onerror = function () {
+
+				this.style.display = "none";
+			
+			}
+
 		}
 
 		const slideContentEl = document.createElement( 'div' );
 		slideContentEl.classList.add( 'slide-content', 'fullsize', 'center' );
 		slideEl.appendChild( slideContentEl );
 
-		const slideTitleEl = document.createElement( 'h1' );
-		slideTitleEl.appendChild( document.createTextNode( object.title ) );
-		slideContentEl.appendChild( slideTitleEl );
+		if ( title ) {
 
-		const slideDescEl = document.createElement( 'p' );
-		slideDescEl.appendChild( document.createTextNode( object.description ) );
-		slideContentEl.appendChild( slideDescEl );
+			const slideTitleEl = document.createElement( 'h1' );
+			slideTitleEl.appendChild( document.createTextNode( title ) );
+			slideContentEl.appendChild( slideTitleEl );
 
-		const enterBtnEl = document.createElement( 'button' );
-		enterBtnEl.classList.add( 'waves-effect', 'waves-light', 'btn' );
-		enterBtnEl.appendChild( document.createTextNode( 'Enter ' + object.title ) );
-		slideContentEl.appendChild( enterBtnEl );
+		}
+
+		if ( desc ) {
+
+			const slideDescEl = document.createElement( 'p' );
+			slideDescEl.appendChild( document.createTextNode( desc ) );
+			slideContentEl.appendChild( slideDescEl );
+
+		}
+
+		return slideEl;
+
+	},
+
+	createShowcaseSlide: function ( object ) {
 
 		const scope = this;
 
-		enterBtnEl.addEventListener( 'click', function () {
+		const slideEl = this.createSlide( object.title, object.description, object.thumbnailSrc );
+		const slideContentEl = slideEl.querySelector( '.slide-content' );
 
-			console.log( 'entering ' + object.title );
-
-			if ( object.modelSrc === '' || object.modelSrc === '#' ) {
+		function setModel( modelObject ) {
+			if ( modelObject.modelSrc === '' || modelObject.modelSrc === '#' ) {
 
 				M.toast( {
-					html: 'Can\'t load model. Model not found.'
+					html: 'Can\'t load model. Model source not found.'
 				} );
 				return;
 
 			}
 
 			scope.showPreloader();
+			if ( ! modelObject._model ) {
 
-			if ( ! object._model ) {
+				scope.gltfLoader.load( modelObject.modelSrc, function ( gltf ) {
 
-				scope.gltfLoader.load( object.modelSrc, function ( gltf ) {
+					modelObject._model = gltf.scene;
+					
+					if ( modelObject.rotation ) {
 
-					object._model = gltf.scene;
-
-					if ( object.rotation ) {
-
-						object._model.rotation.x = object.rotation[ 0 ];
-						object._model.rotation.y = object.rotation[ 1 ];
-						object._model.rotation.z = object.rotation[ 2 ];
+						modelObject._model.rotation.x = modelObject.rotation[ 0 ];
+						modelObject._model.rotation.y = modelObject.rotation[ 1 ];
+						modelObject._model.rotation.z = modelObject.rotation[ 2 ];
 
 					}
 					
-					object._model.traverse( function ( node ) {
+					modelObject._model.traverse( function ( node ) {
 
 						if ( node.isMesh ) {
 			
@@ -193,12 +238,13 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 					} );
 
-					scope.setContent( object._model );
+					scope.setContent( modelObject._model, modelObject );
 
-					scope.createObjectShowcaseSwiper( object.objects, object._model );
+					scope.createObjectShowcaseSwiper( modelObject.objects, modelObject._model );
 
 					scope.hidePreloader();
 					scope.hideShowcaseSwiper();
+					scope.modelContentEl.style.display = 'none';
 
 				}, function onProgress( xhr ) {
 
@@ -216,15 +262,79 @@ Object.assign( MarbleShowcaseApp.prototype, {
 				} );
 
 			} else {
-				
-				scope.createObjectShowcaseSwiper( object.objects, object._model );
-				scope.setContent( object._model );
+
+				scope.createObjectShowcaseSwiper( modelObject.objects, modelObject._model );
+				scope.setContent( modelObject._model, modelObject );
 				scope.hidePreloader();
 				scope.hideShowcaseSwiper();
+				scope.modelContentEl.style.display = 'none';
 
 			}
 
-		}, true );
+		}
+
+		if ( Array.isArray( object.model ) && object.model.length > 1 ) {
+
+			const browseBtnEl = document.createElement( 'button' );
+			browseBtnEl.classList.add( 'waves-effect', 'waves-light', 'btn' );
+			browseBtnEl.appendChild( document.createTextNode( 'Browse' ) );
+			slideContentEl.appendChild( browseBtnEl );
+
+			browseBtnEl.onclick = function () {
+
+				const modelSwiperWrapperEl = scope.modelSwiperContainerEl.querySelector( '.swiper-wrapper' );
+
+				if ( scope.modelSwiper ) {
+
+					scope.modelSwiper.destroy();
+
+				}
+
+				modelSwiperWrapperEl.innerHTML = '';
+
+				for ( let i = 0; i < object.model.length; i ++ ) {
+
+					const modelObject = object.model[ i ];
+
+					const modelSlideEl = scope.createSlide( modelObject.title, modelObject.description, modelObject.thumbnailSrc );
+					const modelSlideContentEl = modelSlideEl.querySelector( '.slide-content' );
+
+					const enterBtnEl = document.createElement( 'button' );
+					enterBtnEl.classList.add( 'waves-effect', 'waves-light', 'btn' );
+					enterBtnEl.appendChild( document.createTextNode( 'Enter' ) );
+					modelSlideContentEl.appendChild( enterBtnEl );
+
+					enterBtnEl.addEventListener( 'click', function () {
+
+						setModel( modelObject );
+
+					}, true );
+
+					modelSwiperWrapperEl.appendChild( modelSlideEl );
+
+				}
+
+				scope.modelContentEl.style.display = '';
+				// scope.showcaseSwiperContainerEl.style.display = 'none';
+
+				scope.modelSwiper = new Swiper( scope.modelSwiperContainerEl, scope.modalShowCaseSwiperSettings );
+
+			}
+
+		} else {
+
+			const enterBtnEl = document.createElement( 'button' );
+			enterBtnEl.classList.add( 'waves-effect', 'waves-light', 'btn' );
+			enterBtnEl.appendChild( document.createTextNode( 'Enter' ) );
+			slideContentEl.appendChild( enterBtnEl );
+
+			enterBtnEl.onclick = function () {
+
+				setModel( Array.isArray( object.model ) ? object.model[ 0 ] : object.model );
+
+			}
+
+		}
 
 		return slideEl;
 
@@ -253,7 +363,6 @@ Object.assign( MarbleShowcaseApp.prototype, {
 			const objectSlideEl = document.createElement( 'div' );
 			objectSlideEl.classList.add( 'swiper-slide' );
 			objectSwiperWrapperEl.appendChild( objectSlideEl );
-
 
 
 			const textureSwiperContainerEl = document.createElement( 'div' );
@@ -317,7 +426,7 @@ Object.assign( MarbleShowcaseApp.prototype, {
 						if ( node.isMesh ) {
 							node.material.specular = 0x494949;
 							node.material.reflectivity = 0.5;
-							node.material.shininess = 30;
+							node.material.shininess = 50;
 							node.material.map = texture;
 							node.material.needsUpdate = true;
 
@@ -331,9 +440,9 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 					} else {
 
-						M.toast( {
-							html: 'Can\'t set texture. Object was not found in the loaded model.'
-						} );
+						// M.toast( {
+						// 	html: 'Can\'t set texture. Object was not found in the loaded model.'
+						// } );
 
 					}
 
@@ -478,30 +587,40 @@ Object.assign( MarbleShowcaseApp.prototype, {
 
 	},
 	
-	setContent: function ( object ) {
+	setContent: function ( object, objectData ) {
 
-		const box = new THREE.Box3().setFromObject( object );
+		const box = new THREE.Box3().setFromObject( object);
 		const center = box.getCenter( new THREE.Vector3() );
 		const size = box.getSize( new THREE.Vector3() );
-
 		const sizeLength = size.length();
+		
+		if ( objectData.camPos ) {
 
-		this.camera.position.x = sizeLength / 2;
-		this.camera.position.y = sizeLength / 2;
-		this.camera.position.z = sizeLength / 2;
+			this.camera.position.x = sizeLength * objectData.camPos[ 0 ];
+			this.camera.position.y = sizeLength * objectData.camPos[ 1 ];
+			this.camera.position.z = sizeLength * objectData.camPos[ 2 ];
+
+		} else {
+			this.camera.position.x = sizeLength / 2;
+			this.camera.position.y = sizeLength / 2;
+			this.camera.position.z = sizeLength / 2;
+
+		}
+
 		this.camera.lookAt( center );
 		this.controls.target.set( 0, 0, 0 );
 		this.controls.update();
 
 		this.camera.near = sizeLength / 100;
-		this.camera.far = sizeLength * 2;
+		this.camera.far = sizeLength * 5;
 		this.camera.updateProjectionMatrix();
 
-		this.controls.maxDistance = sizeLength 
+		//this.controls.maxDistance = sizeLength * 2;
 
 		object.position.x = - center.x;
 		object.position.y = - center.y + size.y / 2;
 		object.position.z = - center.z;
+		
 
 		this.fog.near = sizeLength * 5;
 		this.fog.far = sizeLength * 6;
@@ -517,6 +636,15 @@ Object.assign( MarbleShowcaseApp.prototype, {
 		this.content = object;
 		this.scene.add( this.content );
 
+		if ( objectData.enableControls ) {
+
+			this.controls.enabled = true;
+
+		} else {
+
+			this.controls.enabled = false;
+
+		}
 	},
 
 	onResize: function () {

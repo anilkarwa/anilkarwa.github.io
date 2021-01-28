@@ -12,6 +12,7 @@ body {
 	height: 100%;
 }
 
+
 .center {
 	display: flex;
 	justify-content: center;
@@ -23,7 +24,7 @@ body {
 	z-index: 999;
 }
 
-.showcase-swiper-container {
+.showcase-swiper-container, .model-swiper-container {
 	--swiper-theme-color: white !important;
 	z-index: 900;
 	background: #000;
@@ -33,12 +34,24 @@ body {
 	z-index: 800;
 }
 
-.showcase-swiper-container .slide-content {
-	color: #fff;
+.slide-content {
 	flex-direction: column;
+	background: linear-gradient(to right, #fff 20%, #F39C12 30%,#F39C12 70%, #fff 80%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-fill-color: transparent;
+	background-size: 200% auto;
+	animation: textShine 10s ease-in-out infinite;
 }
 
-.showcase-swiper-container .slide-thumbnail {
+@keyframes textShine {
+	to {
+	  background-position: 200%;
+	}
+  }
+
+.slide-thumbnail {
 	object-fit: cover;
 	mix-blend-mode: soft-light;
 }
@@ -76,8 +89,9 @@ body {
 .camera-icon {
 	background: url(../images/icons/camera.png) no-repeat center / 100% 100%;
 	filter: invert(1);
-	width: 1em;
-	height: 1em;
+    width: 1.2em;
+    height: 1.2em;
+    margin-bottom: 25px;
 }
 
 .texture-swiper-container {
@@ -123,7 +137,8 @@ body {
 }
 
 .btn, .btn-large, .btn-small{
-	background-color: #F5B041 !important;
+	background-color: #F39C12 !important;
+	-webkit-text-fill-color: #fff
 }
 
 .btn-warning {
@@ -141,6 +156,9 @@ body {
 
 .marble-swiper .swiper-slide {
 	margin-right: 5px !important;
+	width: 85px !important;
+    height: 85px !important;
+    border-radius: 50% !important;
 }
 
 .img-container{
@@ -148,7 +166,27 @@ body {
 }
 
 .docs-cropped .modal-body > canvas {
-    max-width: 100%;
+	max-width: 100%;
+}
+
+.model-swiper-container{
+	width: 100%;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	background-color: #f7f7f7;
+}
+
+.model-swiper-container .swiper-wrapper .swiper-slide {
+	background-position: center;
+	background-size: cover;
+	width: 300px;
+    height: 70%;
+    align-self: center;
+}
+
+.btn-small i{
+	font-size: 1.5rem !important;
+	color: #1B2631 !important;
 }
 
 
