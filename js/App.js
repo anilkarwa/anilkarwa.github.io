@@ -424,9 +424,10 @@ Object.assign( MarbleShowcaseApp.prototype, {
 					if ( node ) {
 
 						if ( node.isMesh ) {
-							node.material.specular = 0x494949;
-							node.material.reflectivity = 0.5;
-							node.material.shininess = 50;
+							//node.material.specular = 0x494949;
+							node.material.specular = 0x111111;
+							node.material.reflectivity = 0.1;
+							node.material.shininess = 10;
 							node.material.map = texture;
 							node.material.needsUpdate = true;
 
